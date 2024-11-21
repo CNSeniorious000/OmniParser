@@ -1,16 +1,13 @@
 from typing import Optional
 
 import gradio as gr
-import numpy as np
 import torch
 from PIL import Image
 import io
 
 
-import base64, os
+import base64
 from utils import check_ocr_box, get_yolo_model, get_caption_model_processor, get_som_labeled_img
-import torch
-from PIL import Image
 
 yolo_model = get_yolo_model(model_path='weights/icon_detect/best.pt')
 caption_model_processor = get_caption_model_processor(model_name="florence2", model_name_or_path="weights/icon_caption_florence")
