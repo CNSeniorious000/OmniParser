@@ -42,11 +42,11 @@ def process(
     image_save_path = 'imgs/saved_image_demo.png'
     image_input.save(image_save_path)
     image = Image.open(image_save_path)
-    box_overlay_ratio = max(image.size) / 2000
+    box_overlay_ratio = min(image.size) / 900
     draw_bbox_config = {
         'text_scale': 0.8 * box_overlay_ratio,
         'text_thickness': max(int(2 * box_overlay_ratio), 1),
-        'text_padding': max(int(3 * box_overlay_ratio), 2),
+        'text_padding': max(int(4 * box_overlay_ratio), 8),
         'thickness': max(int(3 * box_overlay_ratio), 1),
     }
     # import pdb; pdb.set_trace()
@@ -75,7 +75,7 @@ with gr.Blocks() as demo:
             iou_threshold_component = gr.Slider(
                 label='IOU Threshold', minimum=0.01, maximum=1.0, step=0.01, value=0.1)
             use_paddleocr_component = gr.Checkbox(
-                label='Use PaddleOCR')
+                label='Use PaddleOCR', value=True)
             imgsz_component = gr.Slider(
                 label='Icon Detect Image Size', minimum=640, maximum=1920, step=32, value=640)
             submit_button_component = gr.Button(
