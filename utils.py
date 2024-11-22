@@ -309,7 +309,7 @@ def get_som_labeled_img(img_path, model=None, BOX_TRESHOLD = 0.01, output_coord_
     else:
         print('no ocr bbox!!!')
         ocr_bbox = None
-    filtered_boxes = remove_overlap(boxes=xyxy, iou_threshold=iou_threshold, ocr_bbox=ocr_bbox)
+    filtered_boxes = remove_overlap(boxes=xyxy, iou_threshold=iou_threshold, ocr_bbox=ocr_bbox)  # TODO: It seems there is a bug in this function which cause the filtered_boxes to be empty when ocr_bbox is None
     
     # get parsed icon local semantics
     if use_local_semantics:
@@ -327,6 +327,9 @@ def get_som_labeled_img(img_path, model=None, BOX_TRESHOLD = 0.01, output_coord_
     else:
         ocr_text = [f"Text Box ID {i}: {txt}" for i, txt in enumerate(ocr_text)]
         parsed_content_merged = ocr_text
+
+    if filtered_boxes.shape == torch.Size([0]):
+        filtered_boxes = torch.zeros((0, 4))
 
     filtered_boxes = box_convert(boxes=filtered_boxes, in_fmt="xyxy", out_fmt="cxcywh")
 
@@ -369,7 +372,7 @@ def get_xywh_yolo(input):
 
 def check_ocr_box(image_path, display_img = True, output_bb_format='xywh', goal_filtering=None, easyocr_args=None, use_paddleocr=False):
     if use_paddleocr:
-        result = paddle_ocr.ocr(image_path, cls=False)[0]
+        result = paddle_ocr.ocr(image_path, cls=False)[0] or []
         coord = [item[0] for item in result]
         text = [item[1][0] for item in result]
     else:  # EasyOCR
